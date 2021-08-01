@@ -13,8 +13,8 @@ teste = Infraestrutura(
 
 teste.loga_no_database()
 print(teste.lista_buckets())
-# teste.cria_bucket(bucket_name='teste-bucket-data-2021')
-# print(teste.lista_buckets())
+teste.cria_bucket(bucket_name=BUCKET_NAME)
+print(teste.lista_buckets())
 # teste.deleta_bucket(bucket_name='teste-bucket-data-2021')
 # print(teste.lista_buckets())
 # teste.upload_object(file='../aluguel.csv', key_name='aluguel.csv')

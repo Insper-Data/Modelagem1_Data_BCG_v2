@@ -1,0 +1,1 @@
+PATH_LOCAL_BASE = r'C:\\Users\\wilgn\\Desktop\\Treinos\\Modelagem 2'
