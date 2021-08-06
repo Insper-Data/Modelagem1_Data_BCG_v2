@@ -79,9 +79,15 @@ class Variaveis:
 
     def transforma_dados(self):
 
-        transformado = self.X_transformado.groupby(by='DATAS')[self.coluna_transformar]
+        if isinstance(self.coluna_transformar, list):
+            transformado = eval(f"self.X_transformado.groupby(by='DATAS'){self.coluna_transformar}")
 
-        resultado = eval(self.tipos_de_transformacoes[self.transformacao])
+            resultado = eval(self.tipos_de_transformacoes[self.transformacao])
+
+        else:
+            transformado = self.X_transformado.groupby(by='DATAS')[self.coluna_transformar]
+
+            resultado = eval(self.tipos_de_transformacoes[self.transformacao])
 
         return resultado
 
@@ -100,7 +106,7 @@ class Variaveis:
             user=self.user,
             nome_do_arquivo=self.doc_name,
             pasta_aws='VARIAVEIS/documentacao',
-            key_name=f'{self.versao_da_variavel}_documentacao_{self.tipo}_{date.today()}.pickle'
+            key_name=f'{self.versao_da_variavel}_documentacao_{self.tipo}_{self.X_ou_Y}_{self.granularidade}_{date.today()}.pickle'
         )
         print('ARQUIVO ENVIADO COM SUCESSO')
 
