@@ -21,9 +21,17 @@ class Variaveis:
         self.data_de_execucao = data_de_execucao
         self.key_name = key_name
         self.granularidade = granularidade.upper()
-        self.tipo_de_transformacao = tipo_de_transformacao
+        self.transformacao = tipo_de_transformacao
         self.nome_do_arquivo = nome_do_arquivo
-        self.tipos_de_granularidade = ['ANUAL', 'SEMESTRAL', 'TRIMESTRAL', 'MENSAL', 'DIARIA']
+        self.tipos_de_granularidade = {
+            'ANUAL': 'AS',
+            'SEMESTRAL': '6M',
+            'TRIMESTRAL': '3M',
+            'MENSAL': 'MS',
+            'DIARIA': 'D'}
+
+        self.tipos_de_transformacoes
+
         self.X = None
         self.X_transformado = None
 
@@ -47,30 +55,16 @@ class Variaveis:
 
             self.X['DATAS'] = pd.to_datetime(self.X)
 
-            if tipo_de_granularidade[0] == 'ANUAL':
-                resultado = self.X[self.X['DATAS'].map(lambda x: x.strftime('%Y'))]
+            codigo_frequencia = self.tipos_de_granularidade[tipo_de_granularidade]
 
-            elif tipo_de_granularidade == 'SEMESTRAL':
-                lista_datas = pd.date_range(start=self.X['DATAS'].min(), end=self.X['DATAS'].max(), freq='6M').tolist()
-                resultado = self.X[self.X['DATAS'].isin(lista_datas)]
+            lista_datas = pd.date_range(start=self.X['DATAS'].min(), end=self.X['DATAS'].max(), freq=f'{codigo_frequencia}').tolist()
+            self.X_transformado = self.X[self.X['DATAS'].isin(lista_datas)].copy()
 
-            elif tipo_de_granularidade == 'TRIMESTRAL':
-                lista_datas = pd.date_range(start=self.X['DATAS'].min(), end=self.X['DATAS'].max(), freq='3M').tolist()
-                resultado = self.X[self.X['DATAS'].isin(lista_datas)]
-
-            elif tipo_de_granularidade == 'MENSAL':
-                lista_datas = pd.date_range(start=self.X['DATAS'].min(), end=self.X['DATAS'].max(), freq='MS').shift(0, freq='D').tolist()
-                resultado = self.X[self.X['DATAS'].isin(lista_datas)]
-
-            elif tipo_de_granularidade == 'DIARIO':
-                lista_datas = pd.date_range(start=self.X['DATAS'].min(), end=self.X['DATAS'].max(), freq='D').shift(0, freq='D').tolist()
-                resultado = self.X[self.X['DATAS'].isin(lista_datas)]
-
-
-            self.X_transformado = resultado
+            return self.X_transformado
 
         if isinstance(self.granularidade, bool):
-            self.X_transformado = self.X
+            self.X_transformado = self.X.copy()
+            return self.X_transformado
 
     def transforma_dados(self):
 
