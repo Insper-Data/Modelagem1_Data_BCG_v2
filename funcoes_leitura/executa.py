@@ -1,7 +1,6 @@
 import os
 
 from envia_arquivos import envia_arquivos_aws
-from path_wil import PATH_LOCAL_BASE
 from datetime import date
 from pega_arquivo import pega_arquivos_aws
 from tqdm import tqdm
@@ -15,14 +14,15 @@ commodity_list = ['Boi_Gordo_Futuros_Dados_Históricos',
  'Soja_NY_Futuros_Dados_Históricos',
  'Suco_de_Laranja_NY_Futuros_Dados_Históricos']
 
+PATH_LOCAL_BASE = r'C:\\Users\\wilgn\\Desktop\\Treinos\\Modelagem 2\\'
 
-envia_arquivos_aws(
-    path=PATH_LOCAL_BASE,
-    user=user,
-    nome_do_arquivo='clima_20_anos_brasil',
-    pasta_aws='RAW/clima',
-    key_name=f'clima_20_anos_brasil_{date.today()}.parquet'
-)
+# envia_arquivos_aws(
+#     path=PATH_LOCAL_BASE,
+#     user=user,
+#     nome_do_arquivo='dados_fake',
+#     pasta_aws='DADOS_DE_DOMINIO',
+#     key_name=f'dados_fake.parquet'
+# )
 
 # object_boto = pega_arquivos_aws(
 #     user=user,
