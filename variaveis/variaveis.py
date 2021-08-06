@@ -6,6 +6,7 @@ from typing import List
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import pandas as pd
+import numpy as np
 import io
 import sys
 
@@ -16,12 +17,12 @@ from funcoes_leitura.envia_arquivos import envia_arquivos_aws
 
 class Variaveis:
 
-    def __init__(self, user: str, data_de_execucao: datetime, key_name: str, granularidade=False, tipo_de_transformacao=False, nome_do_arquivo=False) -> None:
+    def __init__(self, user: str, data_de_execucao: datetime, key_name: str, granularidade=False, transformacao=False, nome_do_arquivo=False) -> None:
         self.user = user
         self.data_de_execucao = data_de_execucao
         self.key_name = key_name
         self.granularidade = granularidade.upper()
-        self.transformacao = tipo_de_transformacao
+        self.transformacao = transformacao
         self.nome_do_arquivo = nome_do_arquivo
         self.tipos_de_granularidade = {
             'ANUAL': 'AS',
@@ -30,13 +31,17 @@ class Variaveis:
             'MENSAL': 'MS',
             'DIARIA': 'D'}
 
-        self.tipos_de_transformacoes
+        self.tipos_de_transformacoes = {
+            'MEDIA': 'transformado.mean()',
+            'DESVIO PADRAO': 'transformado.std',
+            'MEDIANA': 'transformado.median'
+        }
 
         self.X = None
         self.X_transformado = None
+        self.variavel = None
 
     def le_arquivo(self):
-
 
         objeto_boto = pega_arquivos_aws(
             user=self.user,
@@ -60,18 +65,25 @@ class Variaveis:
             lista_datas = pd.date_range(start=self.X['DATAS'].min(), end=self.X['DATAS'].max(), freq=f'{codigo_frequencia}').tolist()
             self.X_transformado = self.X[self.X['DATAS'].isin(lista_datas)].copy()
 
-            return self.X_transformado
 
         if isinstance(self.granularidade, bool):
             self.X_transformado = self.X.copy()
-            return self.X_transformado
+
 
     def transforma_dados(self):
 
-        return None
+        transformado = self.X_transformado.groupby(by='DATAS')
+
+        resultado = eval(self.tipos_de_transformacoes[self.transformacao])
+
+        return resultado
 
     def cria_variavel(self):
 
-        return None
+        self.le_arquivo()
+        self.filtra_granularidade()
+        self.variavel = self.transforma_dados()
+    
+        return self.variavel
 
 
