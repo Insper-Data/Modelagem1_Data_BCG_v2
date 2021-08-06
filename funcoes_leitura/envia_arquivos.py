@@ -18,5 +18,5 @@ def envia_arquivos_aws(path: str, user: str, nome_do_arquivo: str, pasta_aws: st
     )
 
     aws_database.loga_no_database()
-    aws_database.upload_object(file=f"{path}\\{nome_do_arquivo}.parquet", key_name=f"{pasta_aws}/{key_name}")
+    aws_database.upload_object(file=f"{path}\\{nome_do_arquivo}", key_name=f"{pasta_aws}/{key_name}")
     print(aws_database.lista_objects())
