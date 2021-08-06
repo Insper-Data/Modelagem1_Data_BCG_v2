@@ -83,7 +83,7 @@ class Variaveis:
         self.le_arquivo()
         self.filtra_granularidade()
         self.variavel = self.transforma_dados()
-    
+
         return self.variavel
 
 

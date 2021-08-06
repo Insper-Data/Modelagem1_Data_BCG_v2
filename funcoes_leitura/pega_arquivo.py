@@ -4,8 +4,8 @@ import pandas as pd
 
 sys.path.append('../Infraestrutura/')
 
-from infraestrutura import Infraestrutura
-from configs import *
+from Infraestrutura.infraestrutura import Infraestrutura
+from Infraestrutura.configs import *
 
 def pega_arquivos_aws(user: str, pasta_aws: str, key_name: str) -> pd.DataFrame:
 

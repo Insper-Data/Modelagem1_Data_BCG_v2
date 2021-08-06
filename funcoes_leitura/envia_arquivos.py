@@ -1,10 +1,10 @@
 import sys
 import os
 
-sys.path.append('../Infraestrutura/')
+sys.path.append('../Infraestrutura')
 
-from infraestrutura import Infraestrutura
-from configs import *
+from Infraestrutura.infraestrutura import Infraestrutura
+from Infraestrutura.configs import *
 
 print(os.listdir(os.getcwd()))
 def envia_arquivos_aws(path: str, user: str, nome_do_arquivo: str, pasta_aws: str, key_name: str) -> None:
