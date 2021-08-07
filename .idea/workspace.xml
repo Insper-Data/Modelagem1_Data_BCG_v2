@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="267fd288-d281-48a2-a77b-68cd8db05904" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/variaveis/variaveis.py" beforeDir="false" afterPath="$PROJECT_DIR$/variaveis/variaveis.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_input/model_Input.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_input/model_Input.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,7 +29,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../3° Semestre/Insper Data/Projeto/Git projeto/Data_BCG_News/Model/antigo/model.py" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../3° Semestre/Insper Data/Projeto/Git projeto/Data_BCG_News/Model/make_boruta.py" />
     <property name="settings.editor.selected.configurable" value="configurable.group.project" />
   </component>
   <component name="PyConsoleOptionsProvider">

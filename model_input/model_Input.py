@@ -27,7 +27,6 @@ class ModelInput:
         self.id = None
         self.tabela_name = f'{self.id}.parquet'
 
-
     def pega_tabelas(self):
 
         X = pega_arquivos_aws(
@@ -57,8 +56,6 @@ class ModelInput:
 
         )
 
-
-
     def cria_tabela_de_variaveis(self):
 
 
@@ -77,7 +74,4 @@ class ModelInput:
 
         self.envia_model_input()
         print('ARQUIVO ENVIADO COM SUCESSO')
-
-
-
 
