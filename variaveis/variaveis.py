@@ -9,7 +9,7 @@ import pickle
 import io
 import sys
 
-sys.path.append('../funcoes_leitura/')
+sys.path.append('../')
 
 from funcoes_leitura.pega_arquivo import pega_arquivos_aws
 from funcoes_leitura.envia_arquivos import envia_arquivos_aws
@@ -35,6 +35,7 @@ class Variaveis:
             'TRIMESTRAL': '3M',
             'MENSAL': 'MS',
             'DIARIA': 'D'}
+
 
         self.tipos_de_transformacoes = {
             'MEDIA': 'transformado.mean()',
@@ -72,6 +73,7 @@ class Variaveis:
 
             lista_datas = pd.date_range(start=self.X['DATAS'].min(), end=self.X['DATAS'].max(),
                                         freq=f'{codigo_frequencia}').tolist()
+
             self.X_transformado = self.X[self.X['DATAS'].isin(lista_datas)].copy()
 
         if isinstance(self.granularidade, bool):
@@ -118,7 +120,6 @@ class Variaveis:
         self.le_arquivo()
         self.filtra_granularidade()
         self.variavel = self.transforma_dados()
-
 
 
         if isinstance(self.variavel, pd.core.series.Series):
