@@ -10,6 +10,7 @@ from funcoes_leitura.pega_arquivo import pega_arquivos_aws
 import lightgbm as lgb
 from sklearn.model_selection import StratifiedShuffleSplit, GridSearchCV
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import confusion_matrix, accuracy_score, classification_report
 from boruta import BorutaPy
 
 
@@ -34,6 +35,7 @@ class Model:
         self.y_treino = None
         self.X_teste = None
         self.y_teste = None
+        self.previsão = None
 
         parametros_default_lightgbm = {
             'type': 'LGBM',
@@ -125,5 +127,44 @@ class Model:
     def treina_modelo(self):
 
         self.modelo_com_grid_search.fit(self.X_treino, self.y_treino)
+        print("*************************************")
+        print("Modelo Treinado!")
+        print('Parametros GridSearchCV:')
+        print(self.modelo_com_grid_search.get_params())
+        print("*************************************")
+
+    def testa_modelo(self):
+
+        self.previsão = self.modelo_com_grid_search.predict(self.X_teste)
+
+    def metricas_teste(self):
+
+        matriz_de_confusao = confusion_matrix(self.y_teste, self.previsão)
+        acuracia = accuracy_score(self.y_teste, self.previsão)
+        report = classification_report(
+            self.y_teste,
+            self.previsão,
+        )
+
+        print("*************************************")
+        print("METRICAS:")
+        print(f"Acuracia do modelo: {acuracia}")
+        print('Matriz de confusão:')
+        print(matriz_de_confusao)
+        print('Classification report')
+        print(report)
+        print("*************************************")
+
+    def executa_modelo(self):
+
+        self.baixa_base()
+        self.feature_selection()
+        self.divide_amostra()
+        self.separa_variaveis()
+        self.realiza_grid_search()
+        self.treina_modelo()
+        self.testa_modelo()
+        self.metricas_teste()
+
 
     
