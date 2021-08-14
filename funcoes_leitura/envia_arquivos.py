@@ -1,7 +1,7 @@
 import sys
 import os
 
-sys.path.append('../Infraestrutura')
+sys.path.append('../')
 
 from Infraestrutura.infraestrutura import Infraestrutura
 from Infraestrutura.configs import *

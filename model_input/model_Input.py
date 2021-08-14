@@ -4,7 +4,7 @@ import pandas as pd
 
 import sys
 
-sys.path.append('../funcoes_leitura')
+sys.path.append('../')
 
 from datetime import date
 from funcoes_leitura.pega_arquivo import pega_arquivos_aws
@@ -61,7 +61,7 @@ class ModelInput:
 
         self.pega_tabelas()
 
-        self.tabela_X.rename(columns={'RISCO DE FOGO': 'B'}, inplace=True)
+        # self.tabela_X.rename(columns={'RISCO DE FOGO': 'B'}, inplace=True)
 
         self.tabela = pd.concat([
             self.tabela_X, self.tabela_Y

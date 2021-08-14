@@ -126,4 +126,4 @@ class Model:
 
         self.modelo_com_grid_search.fit(self.X_treino, self.y_treino)
 
-    
+
