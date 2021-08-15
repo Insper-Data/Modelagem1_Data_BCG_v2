@@ -40,7 +40,7 @@ class Pipeline:
 
         self.model = Model(
             user=self.user,
-            id_tabela_x=self.model_input.tabela_name,
+            id_tabela_x='',
             nome_coluna_y=self.coluna_para_transformar_y,
             qual_modelo=qual_modelo,
             tamanho_do_test=tamanho_do_test,
@@ -63,6 +63,7 @@ class Pipeline:
         print('MODEL INPUT CRIADO COM SUCESSO')
 
     def cria_modelo(self):
+        self.model.id_tabela_x = self.model_input.tabela_name
         self.model.executa_modelo()
 
     # funcao responsavel por rodar o pipeline
