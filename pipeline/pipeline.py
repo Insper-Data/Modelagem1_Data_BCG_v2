@@ -11,7 +11,7 @@ from model.model import Model
 class Pipeline:
 
     def __init__(self, user: str, key_name: str, coluna_para_transformar_X: str, coluna_para_transformar_y,
-                 versao: str, tipo: str, qual_modelo: str, tamanho_do_test: str, random_state: int, granularidade=False,
+                 versao: str, tipo: str, qual_modelo: str, tamanho_do_test: float, random_state: int, granularidade=False,
                  transformacao_X=False, transformacao_y=False,
                  nome_do_arquivo=False):
         self.user = user
