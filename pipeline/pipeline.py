@@ -40,7 +40,7 @@ class Pipeline:
 
         self.model = Model(
             user=self.user,
-            id_tabela_x=self.id_tabela_X,
+            id_tabela_x=self.model_input.tabela_name,
             nome_coluna_y=self.coluna_para_transformar_y,
             qual_modelo=qual_modelo,
             tamanho_do_test=tamanho_do_test,

@@ -73,14 +73,14 @@ class Model:
             random_state=self.random_state,
             max_iter=10
         )
-
-        self.X_boruta = self.tabela.drop('RISCO DE FOGO', axis=1).values
-        self.Y = self.tabela['RISCO DE FOGO'].values
+        self.tabela.reset_index(inplace=True)
+        self.X_boruta = self.tabela.drop(['DATAS', self.coluna_y], axis=1).values
+        self.Y = self.tabela[self.coluna_y].values
 
         feature_selector.fit(self.X_boruta, self.Y)
 
         self.tabela = feature_selector.transform(self.X_boruta)
-        self.tabela['RISCO DE FOGO'] = self.Y.values
+        self.tabela[self.coluna_y] = self.Y
 
     def divide_amostra(self):
 
@@ -90,17 +90,17 @@ class Model:
             random_state=self.random_state
         )
 
-        for treino_index, test_index in split.splits(self.tabela, self.tabela['RISCO DE FOGO']):
+        for treino_index, test_index in split.splits(self.tabela, self.tabela[self.coluna_y]):
             self.treino = self.tabela.iloc[treino_index, :]
             self.teste = self.tabela.iloc[test_index, :]
 
     def separa_variaveis(self):
 
-        self.X_treino = self.treino.drop('RISCO DE FOGO', axis=1).values
-        self.y_treino = self.treino['RISCO DE FOGO'].values
+        self.X_treino = self.treino.drop(self.coluna_y, axis=1).values
+        self.y_treino = self.treino[self.coluna_y].values
 
-        self.X_teste = self.teste.drop('RISCO DE FOGO', axis=1).values
-        self.y_teste = self.teste['RISCO DE FOGO'].values
+        self.X_teste = self.teste.drop(self.coluna_y, axis=1).values
+        self.y_teste = self.teste[self.coluna_y].values
 
     def realiza_grid_search(self):
 

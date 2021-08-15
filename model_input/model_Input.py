@@ -25,7 +25,7 @@ class ModelInput:
         self.tabela_Y = None
         self.tabela = None
         self.id = None
-        self.tabela_name = f'{self.id}.parquet'
+
 
     def pega_tabelas(self):
 
@@ -68,6 +68,7 @@ class ModelInput:
         ], axis=1)
 
         self.id = f'model_input_{self.tipo_de_variavel}_{date.today()}'
+
         self.tabela_name = f'{self.id}.parquet'
 
         self.tabela.to_parquet(f'./{self.tabela_name}')
