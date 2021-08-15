@@ -138,7 +138,7 @@ class Model:
         print("*************************************")
         print("Modelo Treinado!")
         print('Parametros GridSearchCV:')
-        print(self.modelo_com_grid_search.get_params())
+        print(self.modelo_com_grid_search.best_estimator_)
         print("*************************************")
 
     def testa_modelo(self):
