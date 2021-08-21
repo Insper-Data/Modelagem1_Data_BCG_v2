@@ -1,12 +1,12 @@
 import sys
 import os
 
-sys.path.append('../Infraestrutura')
+sys.path.append('../')
 
 from Infraestrutura.infraestrutura import Infraestrutura
 from Infraestrutura.configs import *
 
-print(os.listdir(os.getcwd()))
+
 def envia_arquivos_aws(path: str, user: str, nome_do_arquivo: str, pasta_aws: str, key_name: str) -> None:
 
 
@@ -19,4 +19,6 @@ def envia_arquivos_aws(path: str, user: str, nome_do_arquivo: str, pasta_aws: st
 
     aws_database.loga_no_database()
     aws_database.upload_object(file=f"{path}\\{nome_do_arquivo}", key_name=f"{pasta_aws}/{key_name}")
-    print(aws_database.lista_objects())
+    # for info in aws_database.lista_objects():
+    #     print(info['Key'])
+    print('ARQUIVO ENVIADO COM SUCESSO !')

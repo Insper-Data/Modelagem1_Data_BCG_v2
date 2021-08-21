@@ -2,7 +2,7 @@ import sys
 import os
 import pandas as pd
 
-sys.path.append('../Infraestrutura/')
+sys.path.append('../')
 
 from Infraestrutura.infraestrutura import Infraestrutura
 from Infraestrutura.configs import *
