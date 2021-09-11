@@ -38,15 +38,6 @@ class Pipeline:
 
         self.model_input = ModelInput(self.user, self.id_tabela_X, self.id_tabela_y, self.tipo, self.granularidade)
 
-        self.model = Model(
-            user=self.user,
-            id_tabela_x='',
-            nome_coluna_y=self.coluna_para_transformar_y,
-            qual_modelo=qual_modelo,
-            tamanho_do_test=tamanho_do_test,
-            random_state=random_state
-        )
-
     # funcao que transforma os dados de dominio em variaveis explicativas
     def cria_variaveis_X(self):
         self.variaveis_X.cria_variavel()
@@ -62,13 +53,8 @@ class Pipeline:
         self.model_input.cria_tabela_de_variaveis()
         print('MODEL INPUT CRIADO COM SUCESSO')
 
-    def cria_modelo(self):
-        self.model.id_tabela_x = self.model_input.tabela_name
-        self.model.executa_modelo()
-
     # funcao responsavel por rodar o pipeline
     def make_pipeline(self):
         self.cria_variaveis_X()
         self.cria_variaveis_y()
         self.cria_model_input()
-        self.cria_modelo()
