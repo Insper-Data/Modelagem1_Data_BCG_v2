@@ -18,14 +18,12 @@ import numpy as np
 
 class Model:
 
-    def __init__(self, user: str, id_tabela_x: str, nome_coluna_y: str, qual_modelo: str, tamanho_do_test: float,
-                 random_state: int):
+    def __init__(self, user: str, id_tabela_x: str, nome_coluna_y: str, qual_modelo: str, tamanho_do_test: float):
         self.user = user
         self.id_tabela_x = id_tabela_x
         self.coluna_y = nome_coluna_y
         self.nome_modelo = qual_modelo
         self.tamanho_do_test = tamanho_do_test
-        self.random_state = random_state
 
         self.tabela = None
         self.treino = None
@@ -44,7 +42,7 @@ class Model:
                 'boosting_type': 'rf',
                 'bagging_fraction': 0.8,
                 'bagging_freq': 1,
-                'random_state': self.random_state
+                'random_state': 201
             }
         }
         self.tipos_de_modelo = {
@@ -53,7 +51,6 @@ class Model:
         }
 
         self.modelo_sem_grid_search = lgb.LGBMClassifier(**parametros_default_lightgbm['params'])
-        self.modelo_tunning = None
         self.model = None
 
     def baixa_base(self):
@@ -71,45 +68,36 @@ class Model:
             self.modelo_sem_grid_search,
             n_estimators=100,
             verbose=0,
-            random_state=self.random_state,
+            random_state=201,
             max_iter=10
         )
         self.tabela.reset_index(inplace=True)
-        datas = self.tabela['DATAS']
-        self.X_boruta = self.tabela.drop(['DATAS', self.coluna_y], axis=1).values
+        datas = self.tabela['Data']
+        self.X_boruta = self.tabela.drop(['Data', self.coluna_y], axis=1).values
         self.Y = self.tabela[self.coluna_y].values
 
         feature_selector.fit(self.X_boruta, self.Y)
 
         self.tabela = pd.DataFrame(feature_selector.transform(self.X_boruta))
         self.tabela[self.coluna_y] = self.Y
-        self.tabela['DATAS'] = datas
+        self.tabela['Data'] = datas
         print('BORUTA EXECUTADO !!')
 
-    def objective(self, trial):
+    def objective(self):
         print(self.tamanho_do_test)
-        cv = TimeSeriesSplit(n_splits=5)
-        rmse = []
+        cv = TimeSeriesSplit(n_splits=3)
 
-        params = {
-            'objective': 'binary',
-            'metric': 'rmse',
-            'boosting': 'rf',
-            'num_leaves': trial.suggest_int(name='num_leaves', low=2, high=200),
-            'feature_fraction': trial.suggest_uniform(name='feature_fraction', low=0.4, high=1.0),
-            'bagging_fraction': trial.suggest_uniform(name='bagging_fraction', low=0.4, high=1.0),
-            'bagging_freq': trial.suggest_int(name='bagging_freq', low=1, high=7),
-            'min_child_samples': trial.suggest_int(name='min_child_samples', low=5, high=100),
-            'max_depth': trial.suggest_int(name='max_depth', low=5, high=15),
-            'learning_rate': trial.suggest_uniform(name='learning_rate', low=0.01, high=0.10)}
+        parameters = {'num_leaves': [20, 40, 60, 80, 100], 'min_child_samples': [5, 10, 15],
+                      'max_depth': [-1, 5, 10, 20],
+                      'learning_rate': [0.05, 0.1, 0.2], 'reg_alpha': [0, 0.01, 0.03]}
 
+        self.model = GridSearchCV(self.modelo_sem_grid_search, parameters, scoring='r2')
 
         for treino_index, test_index in cv.split(self.tabela, self.tabela[self.coluna_y]):
             self.treino = self.tabela.iloc[treino_index, :]
             self.teste = self.tabela.iloc[test_index, :]
 
             print('AMOSTRAS DIVIDIDAS')
-
 
             self.X_treino = self.treino.drop(self.coluna_y, axis=1).values
             self.y_treino = self.treino[self.coluna_y].values
@@ -119,62 +107,33 @@ class Model:
 
             print('VARIAVEIS SEPARADAS')
 
+            self.model.fit(X=self.X_treino, y=self.y_treino)
 
-            self.modelo_tunning = lgb.Dataset(self.X_treino, label=self.y_treino)
-            self.model = lgb.train(params, self.modelo_tunning)
-            previsão = self.model.predict(self.X_teste)
+            print(self.model.best_params_)
 
-            rmse.append(np.sqrt(mean_squared_error(previsão, self.y_teste)))
-        # print(rmse)
-        return np.average(rmse)
+            self.previsão = self.model.predict(X_teste)
 
 
     def testa_modelo(self):
 
-        study = optuna.create_study(direction="minimize")
-        study.optimize(self.objective, n_trials=80)
-        
-        print("Number of finished trials:", len(study.trials))
-        print("Best trial:", study.best_trial.params)
-        best_params = study.best_trial.params
-
-        fixed_params = {'objective': 'binary',
-                        'metric': 'rmse',
-                        'boosting': 'rf',
-                        'num_threads': 4}
-
-        best_params = {**best_params, **fixed_params}
-
-        lgb_train = lgb.Dataset(self.X_treino, self.y_treino)
-        lgb_eval = lgb.Dataset(self.X_teste, self.y_teste, reference=lgb_train)
-
-        lgbm_model = lgb.train(best_params, lgb_train, 250, valid_sets=lgb_eval,
-                                early_stopping_rounds=50, verbose_eval=20)
-
-        self.previsão = lgbm_model.predict(self.X_teste, num_iteration=lgbm_model.best_iteration)
-
+        self.previsão = self.model.predict(X_teste)
         print('PREVISÃO REALIZADA !')
 
     def metricas_teste(self):
-        # report = classification_report(
-        #     self.y_teste,
-        #     self.previsão,
-        # )
-        r2_rf_boruta_test = r2_score(self.y_teste, self.previsão)
-        fpr, tpr, thresholds = roc_curve(self.y_teste, self.previsão, pos_label=2)
+        r2 = r2_score(self.y_teste, self.previsão)
+        fpr, tpr, thresholds = roc_curve(self.y_teste, self.previsão)
         auc_metric = auc(fpr, tpr)
 
         print("******************************")
         print("METRICAS:")
-        # print('Classification report')
-        # print(report)
         print('R2 SCORE:')
-        print(r2_rf_boruta_test)
+        print(r2)
         print('AUC:')
         print(auc_metric)
 
     def executa_modelo(self):
         self.baixa_base()
         self.feature_selection()
+        self.objective()
         self.testa_modelo()
         self.metricas_teste()
